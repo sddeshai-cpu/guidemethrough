@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Plus, TrendingUp, TrendingDown, Minus } from "lucide-react";
+import { Plus, TrendingUp, TrendingDown, Minus, FileDown, FileText } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth-context";
@@ -10,10 +10,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
+import { exportCSV, exportPDF, type ExportSubject } from "@/lib/export";
 
 type Profile = { id: string; username: string; stream: string | null };
 type Subject = { id: string; name: string };
-type Mark = { id: string; subject_id: string; marks: number; max_marks: number; exam_date: string };
+type Mark = { id: string; subject_id: string; exam_name: string; marks: number; max_marks: number; exam_date: string };
 
 export const Route = createFileRoute("/dashboard")({ component: () => <AppShell><DashboardInner /></AppShell> });
 
@@ -31,7 +32,7 @@ function DashboardInner() {
     const [p, s, m] = await Promise.all([
       supabase.from("profiles").select("id, username, stream").eq("id", user.id).maybeSingle(),
       supabase.from("subjects").select("id, name").eq("user_id", user.id).order("created_at"),
-      supabase.from("marks").select("id, subject_id, marks, max_marks, exam_date").eq("user_id", user.id).order("exam_date"),
+      supabase.from("marks").select("id, subject_id, exam_name, marks, max_marks, exam_date").eq("user_id", user.id).order("exam_date"),
     ]);
     if (p.data) setProfile(p.data as Profile);
     if (s.data) setSubjects(s.data as Subject[]);
@@ -65,7 +66,29 @@ function DashboardInner() {
           <h1 className="mt-1 text-4xl">Hi, {profile?.username}.</h1>
           <p className="mt-1 text-muted-foreground">Here are your subjects and how each is trending.</p>
         </div>
-        <Button variant="outline" size="sm" onClick={() => navigate({ to: "/onboarding" })}>Change stream</Button>
+        <div className="flex flex-wrap gap-2">
+          <Button variant="outline" size="sm" onClick={() => {
+            if (!subjects.length) { toast.error("Nothing to export yet."); return; }
+            const data: ExportSubject[] = subjects.map((s) => ({
+              name: s.name,
+              marks: marks.filter((m) => m.subject_id === s.id).map((m) => ({
+                exam_name: m.exam_name, marks: m.marks, max_marks: m.max_marks, exam_date: m.exam_date,
+              })),
+            }));
+            exportPDF(data, { username: profile?.username });
+          }}><FileText className="mr-1 h-4 w-4" /> Export PDF</Button>
+          <Button variant="outline" size="sm" onClick={() => {
+            if (!subjects.length) { toast.error("Nothing to export yet."); return; }
+            const data: ExportSubject[] = subjects.map((s) => ({
+              name: s.name,
+              marks: marks.filter((m) => m.subject_id === s.id).map((m) => ({
+                exam_name: m.exam_name, marks: m.marks, max_marks: m.max_marks, exam_date: m.exam_date,
+              })),
+            }));
+            exportCSV(data);
+          }}><FileDown className="mr-1 h-4 w-4" /> Export CSV</Button>
+          <Button variant="outline" size="sm" onClick={() => navigate({ to: "/onboarding" })}>Change stream</Button>
+        </div>
       </div>
 
       <div className="mt-8 flex flex-wrap items-center gap-2">

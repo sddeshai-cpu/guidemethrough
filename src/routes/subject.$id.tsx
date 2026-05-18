@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { ArrowLeft, Trash2, Plus } from "lucide-react";
+import { ArrowLeft, Trash2, Plus, FileText, FileDown } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, ReferenceLine } from "recharts";
 import { AppShell } from "@/components/AppShell";
 import { supabase } from "@/integrations/supabase/client";
@@ -9,6 +9,7 @@ import { useAuth } from "@/lib/auth-context";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { exportCSV, exportPDF } from "@/lib/export";
 
 type Subject = { id: string; name: string };
 type Mark = { id: string; exam_name: string; marks: number; max_marks: number; exam_date: string };
@@ -95,9 +96,19 @@ function SubjectInner() {
           <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground">Subject</p>
           <h1 className="mt-1 text-4xl">{subject.name}</h1>
         </div>
-        <Button variant="ghost" size="sm" onClick={deleteSubject}>
-          <Trash2 className="mr-1 h-4 w-4" /> Delete subject
-        </Button>
+        <div className="flex flex-wrap gap-2">
+          <Button variant="outline" size="sm" disabled={!marks.length} onClick={() => {
+            const slug = subject!.name.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+            exportPDF([{ name: subject!.name, marks }], { title: `${subject!.name} · Progression`, filename: `${slug}.pdf` });
+          }}><FileText className="mr-1 h-4 w-4" /> PDF</Button>
+          <Button variant="outline" size="sm" disabled={!marks.length} onClick={() => {
+            const slug = subject!.name.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+            exportCSV([{ name: subject!.name, marks }], `${slug}.csv`);
+          }}><FileDown className="mr-1 h-4 w-4" /> CSV</Button>
+          <Button variant="ghost" size="sm" onClick={deleteSubject}>
+            <Trash2 className="mr-1 h-4 w-4" /> Delete subject
+          </Button>
+        </div>
       </div>
 
       <div className="mt-8 grid gap-4 sm:grid-cols-3">
