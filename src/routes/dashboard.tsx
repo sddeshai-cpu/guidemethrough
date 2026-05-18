@@ -32,7 +32,7 @@ function DashboardInner() {
     const [p, s, m] = await Promise.all([
       supabase.from("profiles").select("id, username, stream").eq("id", user.id).maybeSingle(),
       supabase.from("subjects").select("id, name").eq("user_id", user.id).order("created_at"),
-      supabase.from("marks").select("id, subject_id, marks, max_marks, exam_date").eq("user_id", user.id).order("exam_date"),
+      supabase.from("marks").select("id, subject_id, exam_name, marks, max_marks, exam_date").eq("user_id", user.id).order("exam_date"),
     ]);
     if (p.data) setProfile(p.data as Profile);
     if (s.data) setSubjects(s.data as Subject[]);
