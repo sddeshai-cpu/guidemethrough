@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
-import { ArrowLeft, Trash2, Plus, FileText, FileDown } from "lucide-react";
+import { ArrowLeft, Trash2, Plus, FileText, FileDown, Upload, Download } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, ReferenceLine } from "recharts";
 import { AppShell } from "@/components/AppShell";
 import { getSupabase } from "@/lib/supabase-browser";
@@ -9,7 +9,9 @@ import { useAuth } from "@/lib/auth-context";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { exportCSV, exportPDF } from "@/lib/export";
+import { parseFile, downloadTemplate, type ImportRow } from "@/lib/bulk-import";
 
 type Subject = { id: string; name: string };
 type Mark = { id: string; exam_name: string; marks: number; max_marks: number; exam_date: string };
