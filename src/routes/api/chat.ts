@@ -1,20 +1,48 @@
 import "@tanstack/react-start";
 import { createFileRoute } from "@tanstack/react-router";
-import { convertToModelMessages, streamText, type UIMessage } from "ai";
+import { convertToModelMessages, stepCountIs, streamText, tool, type UIMessage } from "ai";
+import { z } from "zod";
 import { createLovableAiGatewayProvider } from "@/lib/ai-gateway";
+import { findResources } from "@/lib/study-resources";
 
-type Body = { messages?: unknown; stream?: string };
+type SubjectCtx = { name: string; avg: number | null; latest: number | null; best: number | null; count: number };
+type Body = { messages?: unknown; stream?: string; subjects?: SubjectCtx[] };
 
-const SYSTEM = (stream?: string) => `You are an expert tutor for Sri Lankan G.C.E. Advanced Level (A/L) students${
-  stream ? ` in the ${stream} stream` : ""
-}.
+function buildSystem(stream?: string, subjects?: SubjectCtx[]) {
+  const lines: string[] = [];
+  lines.push(`You are an expert tutor for Sri Lankan G.C.E. Advanced Level (A/L) students${stream ? ` in the ${stream} stream` : ""}.`);
+  lines.push("");
+  lines.push("Guidelines:");
+  lines.push("- Follow the Sri Lankan A/L syllabus (NIE / Department of Examinations).");
+  lines.push("- Explain step-by-step, show working for problems, use plain math notation (e.g. v = u + at).");
+  lines.push("- Mention common A/L exam tricks, past-paper patterns and time-saving methods.");
+  lines.push("- Encourage the student warmly. Be concise but complete.");
+  lines.push("- Use the student's subject context below to tailor difficulty, examples and revision priorities.");
+  lines.push("- When the student asks for study tips, a study plan, where to revise, or which resources to use, CALL the `findStudyResources` tool for the relevant subject and weave the cited resources into your answer. Always cite resources by their title.");
 
-Guidelines:
-- Follow the Sri Lankan A/L syllabus (Department of Examinations / NIE).
-- Explain step-by-step, show working for problems, and use clear LaTeX-free math (e.g. v = u + at).
-- When relevant, mention common A/L exam tricks, past-paper patterns, and time-saving methods.
-- Encourage the student warmly. Keep answers concise but complete.
-- If a question is outside academic scope, gently steer back to studies.`;
+  if (subjects && subjects.length) {
+    lines.push("");
+    lines.push("Student subject context:");
+    for (const s of subjects) {
+      const parts: string[] = [];
+      if (s.count > 0) {
+        if (s.latest != null) parts.push(`latest ${s.latest}%`);
+        if (s.avg != null) parts.push(`avg ${s.avg}%`);
+        if (s.best != null) parts.push(`best ${s.best}%`);
+        parts.push(`${s.count} paper${s.count === 1 ? "" : "s"} logged`);
+      } else {
+        parts.push("no marks logged yet");
+      }
+      lines.push(`- ${s.name}: ${parts.join(", ")}`);
+    }
+    lines.push("");
+    lines.push("Prioritise the weakest subjects when giving general advice. If a subject has no marks, suggest a baseline diagnostic.");
+  } else {
+    lines.push("");
+    lines.push("The student has not logged any subjects yet — suggest they add subjects and marks for personalised guidance.");
+  }
+  return lines.join("\n");
+}
 
 export const Route = createFileRoute("/api/chat")({
   server: {
@@ -36,9 +64,25 @@ export const Route = createFileRoute("/api/chat")({
         const gateway = createLovableAiGatewayProvider(key);
         const model = gateway("google/gemini-3-flash-preview");
 
+        const tools = {
+          findStudyResources: tool({
+            description: "Look up vetted study resources (with URLs) for a Sri Lankan A/L subject. Call this whenever the student asks for study tips, a revision plan, or where to learn a topic.",
+            inputSchema: z.object({
+              subject: z.string().describe("Subject name, e.g. 'Physics', 'Combined Maths', 'Economics'."),
+              topic: z.string().optional().describe("Optional topic within the subject, e.g. 'electromagnetism'."),
+            }),
+            execute: async ({ subject, topic }) => {
+              const resources = findResources(subject, topic);
+              return { subject, topic: topic ?? null, resources };
+            },
+          }),
+        };
+
         const result = streamText({
           model,
-          system: SYSTEM(body.stream),
+          system: buildSystem(body.stream, body.subjects),
+          tools,
+          stopWhen: stepCountIs(50),
           messages: await convertToModelMessages(body.messages as UIMessage[]),
         });
 
