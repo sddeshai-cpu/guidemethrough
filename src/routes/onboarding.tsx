@@ -2,7 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
 import { AppShell } from "@/components/AppShell";
-import { supabase } from "@/integrations/supabase/client";
+import { getSupabase } from "@/lib/supabase-browser";
 import { useAuth } from "@/lib/auth-context";
 import { STREAMS, type StreamId } from "@/lib/streams";
 import { Button } from "@/components/ui/button";
@@ -43,6 +43,7 @@ function Inner() {
           onClick={async () => {
             if (!picked || !user) return;
             setBusy(true);
+            const supabase = await getSupabase();
             const { error } = await supabase.from("profiles").update({ stream: picked }).eq("id", user.id);
             setBusy(false);
             if (error) { toast.error(error.message); return; }
