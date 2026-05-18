@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Plus, TrendingUp, TrendingDown, Minus, FileDown, FileText } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
-import { supabase } from "@/integrations/supabase/client";
+import { getSupabase } from "@/lib/supabase-browser";
 import { useAuth } from "@/lib/auth-context";
 import { streamLabel } from "@/lib/streams";
 import { Button } from "@/components/ui/button";
@@ -29,6 +29,7 @@ function DashboardInner() {
 
   async function load() {
     if (!user) return;
+    const supabase = await getSupabase();
     const [p, s, m] = await Promise.all([
       supabase.from("profiles").select("id, username, stream").eq("id", user.id).maybeSingle(),
       supabase.from("subjects").select("id, name").eq("user_id", user.id).order("created_at"),
@@ -52,6 +53,7 @@ function DashboardInner() {
     const name = newSubject.trim();
     if (!name || !user) return;
     if (name.length > 60) { toast.error("Keep it under 60 chars."); return; }
+    const supabase = await getSupabase();
     const { data, error } = await supabase.from("subjects").insert({ user_id: user.id, name }).select().single();
     if (error) { toast.error(error.message); return; }
     setSubjects((arr) => [...arr, data as Subject]);
@@ -185,6 +187,7 @@ function QuickAddMarkCard({ subjects, onAdded }: { subjects: Subject[]; onAdded:
                 toast.error("Check the mark values."); return;
               }
               setBusy(true);
+              const supabase = await getSupabase();
               const { error } = await supabase.from("marks").insert({
                 user_id: user.id, subject_id: subjectId, exam_name: examName.trim(),
                 marks: m, max_marks: mm, exam_date: date,
