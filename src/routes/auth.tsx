@@ -2,7 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { z } from "zod";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
+import { getSupabase } from "@/lib/supabase-browser";
 import { useAuth } from "@/lib/auth-context";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -71,6 +71,7 @@ function SignInForm() {
         const parsed = signInSchema.safeParse({ email, password });
         if (!parsed.success) { toast.error("Check your email and password."); return; }
         setBusy(true);
+        const supabase = await getSupabase();
         const { error } = await supabase.auth.signInWithPassword(parsed.data);
         setBusy(false);
         if (error) toast.error(error.message);
@@ -100,6 +101,7 @@ function SignUpForm() {
           return;
         }
         setBusy(true);
+        const supabase = await getSupabase();
         const { error } = await supabase.auth.signUp({
           email: parsed.data.email,
           password: parsed.data.password,
