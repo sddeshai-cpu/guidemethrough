@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import type { Session, User } from "@supabase/supabase-js";
-import { supabase } from "@/integrations/supabase/client";
+import { getSupabase } from "@/lib/supabase-browser";
 
 type AuthCtx = {
   user: User | null;
@@ -16,15 +16,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => {
-      setSession(s);
-      setLoading(false);
+    let cancelled = false;
+    let unsubscribe: (() => void) | undefined;
+
+    getSupabase().then((supabase) => {
+      if (cancelled) return;
+      const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => {
+        setSession(s);
+        setLoading(false);
+      });
+      unsubscribe = () => sub.subscription.unsubscribe();
+      supabase.auth.getSession().then(({ data }) => {
+        if (!cancelled) {
+          setSession(data.session);
+          setLoading(false);
+        }
+      });
+    }).catch(() => {
+      if (!cancelled) setLoading(false);
     });
-    supabase.auth.getSession().then(({ data }) => {
-      setSession(data.session);
-      setLoading(false);
-    });
-    return () => sub.subscription.unsubscribe();
+
+    return () => {
+      cancelled = true;
+      unsubscribe?.();
+    };
   }, []);
 
   return (
@@ -34,6 +49,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         session,
         loading,
         signOut: async () => {
+          const supabase = await getSupabase();
           await supabase.auth.signOut();
         },
       }}

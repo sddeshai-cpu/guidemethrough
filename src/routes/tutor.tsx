@@ -4,7 +4,7 @@ import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
 import { Send, Sparkles } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
-import { supabase } from "@/integrations/supabase/client";
+import { getSupabase } from "@/lib/supabase-browser";
 import { useAuth } from "@/lib/auth-context";
 import { streamLabel } from "@/lib/streams";
 import { Button } from "@/components/ui/button";
@@ -18,8 +18,10 @@ function TutorInner() {
 
   useEffect(() => {
     if (!user) return;
-    supabase.from("profiles").select("stream").eq("id", user.id).maybeSingle()
-      .then(({ data }) => setStream(data?.stream ?? null));
+    getSupabase().then((supabase) => {
+      supabase.from("profiles").select("stream").eq("id", user.id).maybeSingle()
+        .then(({ data }) => setStream(data?.stream ?? null));
+    });
   }, [user]);
 
   const { messages, sendMessage, status, error } = useChat({
