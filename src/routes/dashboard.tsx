@@ -66,7 +66,29 @@ function DashboardInner() {
           <h1 className="mt-1 text-4xl">Hi, {profile?.username}.</h1>
           <p className="mt-1 text-muted-foreground">Here are your subjects and how each is trending.</p>
         </div>
-        <Button variant="outline" size="sm" onClick={() => navigate({ to: "/onboarding" })}>Change stream</Button>
+        <div className="flex flex-wrap gap-2">
+          <Button variant="outline" size="sm" onClick={() => {
+            if (!subjects.length) { toast.error("Nothing to export yet."); return; }
+            const data: ExportSubject[] = subjects.map((s) => ({
+              name: s.name,
+              marks: marks.filter((m) => m.subject_id === s.id).map((m) => ({
+                exam_name: m.exam_name, marks: m.marks, max_marks: m.max_marks, exam_date: m.exam_date,
+              })),
+            }));
+            exportPDF(data, { username: profile?.username });
+          }}><FileText className="mr-1 h-4 w-4" /> Export PDF</Button>
+          <Button variant="outline" size="sm" onClick={() => {
+            if (!subjects.length) { toast.error("Nothing to export yet."); return; }
+            const data: ExportSubject[] = subjects.map((s) => ({
+              name: s.name,
+              marks: marks.filter((m) => m.subject_id === s.id).map((m) => ({
+                exam_name: m.exam_name, marks: m.marks, max_marks: m.max_marks, exam_date: m.exam_date,
+              })),
+            }));
+            exportCSV(data);
+          }}><FileDown className="mr-1 h-4 w-4" /> Export CSV</Button>
+          <Button variant="outline" size="sm" onClick={() => navigate({ to: "/onboarding" })}>Change stream</Button>
+        </div>
       </div>
 
       <div className="mt-8 flex flex-wrap items-center gap-2">
