@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
-import { ArrowLeft, Trash2, Plus, FileText, FileDown } from "lucide-react";
+import { ArrowLeft, Trash2, Plus, FileText, FileDown, Upload, Download } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, ReferenceLine } from "recharts";
 import { AppShell } from "@/components/AppShell";
 import { getSupabase } from "@/lib/supabase-browser";
@@ -9,7 +9,9 @@ import { useAuth } from "@/lib/auth-context";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { exportCSV, exportPDF } from "@/lib/export";
+import { parseFile, downloadTemplate, type ImportRow } from "@/lib/bulk-import";
 
 type Subject = { id: string; name: string };
 type Mark = { id: string; exam_name: string; marks: number; max_marks: number; exam_date: string };
@@ -31,6 +33,44 @@ function SubjectInner() {
   const [max, setMax] = useState("100");
   const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
   const [busy, setBusy] = useState(false);
+
+  const fileRef = useRef<HTMLInputElement>(null);
+  const [importOpen, setImportOpen] = useState(false);
+  const [importRows, setImportRows] = useState<ImportRow[]>([]);
+  const [importErrors, setImportErrors] = useState<{ row: number; message: string }[]>([]);
+  const [importing, setImporting] = useState(false);
+
+  async function onFilePicked(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+    try {
+      const { rows, errors } = await parseFile(file);
+      setImportRows(rows);
+      setImportErrors(errors);
+      setImportOpen(true);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Could not read file.");
+    }
+  }
+
+  async function confirmImport() {
+    if (!user || importRows.length === 0) return;
+    setImporting(true);
+    const supabase = await getSupabase();
+    const payload = importRows.map((r) => ({
+      user_id: user.id, subject_id: id,
+      exam_name: r.exam_name, marks: r.marks, max_marks: r.max_marks, exam_date: r.exam_date,
+    }));
+    const { error } = await supabase.from("marks").insert(payload);
+    setImporting(false);
+    if (error) { toast.error(error.message); return; }
+    toast.success(`Imported ${payload.length} mark${payload.length === 1 ? "" : "s"}.`);
+    setImportOpen(false);
+    setImportRows([]);
+    setImportErrors([]);
+    load();
+  }
 
   async function load() {
     if (!user) return;
@@ -101,6 +141,10 @@ function SubjectInner() {
           <h1 className="mt-1 text-4xl">{subject.name}</h1>
         </div>
         <div className="flex flex-wrap gap-2">
+          <input ref={fileRef} type="file" accept=".csv,.xlsx,.xls,text/csv,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" className="hidden" onChange={onFilePicked} />
+          <Button variant="outline" size="sm" onClick={() => fileRef.current?.click()}>
+            <Upload className="mr-1 h-4 w-4" /> Import
+          </Button>
           <Button variant="outline" size="sm" disabled={!marks.length} onClick={() => {
             const slug = subject!.name.toLowerCase().replace(/[^a-z0-9]+/g, "-");
             exportPDF([{ name: subject!.name, marks }], { title: `${subject!.name} · Progression`, filename: `${slug}.pdf` });
@@ -188,6 +232,66 @@ function SubjectInner() {
           </div>
         </div>
       </div>
+
+      <Dialog open={importOpen} onOpenChange={setImportOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Import marks</DialogTitle>
+            <DialogDescription>
+              Required columns: <code>exam_name</code>, <code>marks</code>, <code>max_marks</code>, <code>exam_date</code>.
+            </DialogDescription>
+          </DialogHeader>
+
+          {importErrors.length > 0 && (
+            <div className="rounded-md border border-destructive/40 bg-destructive/5 p-3 text-sm">
+              <p className="font-medium text-destructive">Skipping {importErrors.length} row{importErrors.length === 1 ? "" : "s"}:</p>
+              <ul className="mt-1 max-h-32 list-disc overflow-auto pl-5 text-muted-foreground">
+                {importErrors.slice(0, 20).map((e, i) => (
+                  <li key={i}>Row {e.row}: {e.message}</li>
+                ))}
+                {importErrors.length > 20 && <li>…and {importErrors.length - 20} more</li>}
+              </ul>
+            </div>
+          )}
+
+          {importRows.length > 0 ? (
+            <div className="max-h-72 overflow-auto rounded-md border">
+              <table className="w-full text-sm">
+                <thead className="sticky top-0 bg-muted/50">
+                  <tr className="text-left">
+                    <th className="px-3 py-2 font-medium">Paper</th>
+                    <th className="px-3 py-2 font-medium">Date</th>
+                    <th className="px-3 py-2 font-medium text-right">Marks</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {importRows.map((r, i) => (
+                    <tr key={i} className="border-t">
+                      <td className="px-3 py-2">{r.exam_name}</td>
+                      <td className="px-3 py-2 text-muted-foreground">{r.exam_date}</td>
+                      <td className="px-3 py-2 text-right">{r.marks}/{r.max_marks}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <p className="text-sm text-muted-foreground">No valid rows found.</p>
+          )}
+
+          <DialogFooter className="gap-2 sm:justify-between">
+            <Button variant="ghost" size="sm" onClick={downloadTemplate}>
+              <Download className="mr-1 h-4 w-4" /> Template
+            </Button>
+            <div className="flex gap-2">
+              <Button variant="outline" onClick={() => setImportOpen(false)}>Cancel</Button>
+              <Button onClick={confirmImport} disabled={importing || importRows.length === 0}>
+                {importing ? "Importing…" : `Import ${importRows.length} mark${importRows.length === 1 ? "" : "s"}`}
+              </Button>
+            </div>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
