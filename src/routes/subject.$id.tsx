@@ -34,6 +34,44 @@ function SubjectInner() {
   const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
   const [busy, setBusy] = useState(false);
 
+  const fileRef = useRef<HTMLInputElement>(null);
+  const [importOpen, setImportOpen] = useState(false);
+  const [importRows, setImportRows] = useState<ImportRow[]>([]);
+  const [importErrors, setImportErrors] = useState<{ row: number; message: string }[]>([]);
+  const [importing, setImporting] = useState(false);
+
+  async function onFilePicked(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+    try {
+      const { rows, errors } = await parseFile(file);
+      setImportRows(rows);
+      setImportErrors(errors);
+      setImportOpen(true);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Could not read file.");
+    }
+  }
+
+  async function confirmImport() {
+    if (!user || importRows.length === 0) return;
+    setImporting(true);
+    const supabase = await getSupabase();
+    const payload = importRows.map((r) => ({
+      user_id: user.id, subject_id: id,
+      exam_name: r.exam_name, marks: r.marks, max_marks: r.max_marks, exam_date: r.exam_date,
+    }));
+    const { error } = await supabase.from("marks").insert(payload);
+    setImporting(false);
+    if (error) { toast.error(error.message); return; }
+    toast.success(`Imported ${payload.length} mark${payload.length === 1 ? "" : "s"}.`);
+    setImportOpen(false);
+    setImportRows([]);
+    setImportErrors([]);
+    load();
+  }
+
   async function load() {
     if (!user) return;
     const supabase = await getSupabase();
