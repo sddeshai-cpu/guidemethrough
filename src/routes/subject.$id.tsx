@@ -141,6 +141,10 @@ function SubjectInner() {
           <h1 className="mt-1 text-4xl">{subject.name}</h1>
         </div>
         <div className="flex flex-wrap gap-2">
+          <input ref={fileRef} type="file" accept=".csv,.xlsx,.xls,text/csv,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" className="hidden" onChange={onFilePicked} />
+          <Button variant="outline" size="sm" onClick={() => fileRef.current?.click()}>
+            <Upload className="mr-1 h-4 w-4" /> Import
+          </Button>
           <Button variant="outline" size="sm" disabled={!marks.length} onClick={() => {
             const slug = subject!.name.toLowerCase().replace(/[^a-z0-9]+/g, "-");
             exportPDF([{ name: subject!.name, marks }], { title: `${subject!.name} · Progression`, filename: `${slug}.pdf` });
