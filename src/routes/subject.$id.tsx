@@ -96,9 +96,19 @@ function SubjectInner() {
           <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground">Subject</p>
           <h1 className="mt-1 text-4xl">{subject.name}</h1>
         </div>
-        <Button variant="ghost" size="sm" onClick={deleteSubject}>
-          <Trash2 className="mr-1 h-4 w-4" /> Delete subject
-        </Button>
+        <div className="flex flex-wrap gap-2">
+          <Button variant="outline" size="sm" disabled={!marks.length} onClick={() => {
+            const slug = subject!.name.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+            exportPDF([{ name: subject!.name, marks }], { title: `${subject!.name} · Progression`, filename: `${slug}.pdf` });
+          }}><FileText className="mr-1 h-4 w-4" /> PDF</Button>
+          <Button variant="outline" size="sm" disabled={!marks.length} onClick={() => {
+            const slug = subject!.name.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+            exportCSV([{ name: subject!.name, marks }], `${slug}.csv`);
+          }}><FileDown className="mr-1 h-4 w-4" /> CSV</Button>
+          <Button variant="ghost" size="sm" onClick={deleteSubject}>
+            <Trash2 className="mr-1 h-4 w-4" /> Delete subject
+          </Button>
+        </div>
       </div>
 
       <div className="mt-8 grid gap-4 sm:grid-cols-3">
