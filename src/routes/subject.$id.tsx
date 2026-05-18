@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import { ArrowLeft, Trash2, Plus, FileText, FileDown } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, ReferenceLine } from "recharts";
 import { AppShell } from "@/components/AppShell";
-import { supabase } from "@/integrations/supabase/client";
+import { getSupabase } from "@/lib/supabase-browser";
 import { useAuth } from "@/lib/auth-context";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -34,6 +34,7 @@ function SubjectInner() {
 
   async function load() {
     if (!user) return;
+    const supabase = await getSupabase();
     const [s, mk] = await Promise.all([
       supabase.from("subjects").select("id, name").eq("id", id).eq("user_id", user.id).maybeSingle(),
       supabase.from("marks").select("id, exam_name, marks, max_marks, exam_date").eq("user_id", user.id).eq("subject_id", id).order("exam_date"),
@@ -60,6 +61,7 @@ function SubjectInner() {
 
   async function deleteSubject() {
     if (!confirm(`Delete ${subject!.name} and all its marks?`)) return;
+    const supabase = await getSupabase();
     const { error } = await supabase.from("subjects").delete().eq("id", id);
     if (error) { toast.error(error.message); return; }
     navigate({ to: "/dashboard" });
@@ -70,6 +72,7 @@ function SubjectInner() {
     const mv = Number(m), mxv = Number(max);
     if (!Number.isFinite(mv) || !Number.isFinite(mxv) || mxv <= 0 || mv < 0 || mv > mxv) { toast.error("Check the values."); return; }
     setBusy(true);
+    const supabase = await getSupabase();
     const { error } = await supabase.from("marks").insert({
       user_id: user.id, subject_id: id, exam_name: examName.trim(),
       marks: mv, max_marks: mxv, exam_date: date,
@@ -81,6 +84,7 @@ function SubjectInner() {
   }
 
   async function delMark(mid: string) {
+    const supabase = await getSupabase();
     const { error } = await supabase.from("marks").delete().eq("id", mid);
     if (error) { toast.error(error.message); return; }
     setMarks((arr) => arr.filter((x) => x.id !== mid));
