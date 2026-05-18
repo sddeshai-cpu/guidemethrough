@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Plus, TrendingUp, TrendingDown, Minus } from "lucide-react";
+import { Plus, TrendingUp, TrendingDown, Minus, FileDown, FileText } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth-context";
@@ -10,10 +10,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
+import { exportCSV, exportPDF, type ExportSubject } from "@/lib/export";
 
 type Profile = { id: string; username: string; stream: string | null };
 type Subject = { id: string; name: string };
-type Mark = { id: string; subject_id: string; marks: number; max_marks: number; exam_date: string };
+type Mark = { id: string; subject_id: string; exam_name: string; marks: number; max_marks: number; exam_date: string };
 
 export const Route = createFileRoute("/dashboard")({ component: () => <AppShell><DashboardInner /></AppShell> });
 
