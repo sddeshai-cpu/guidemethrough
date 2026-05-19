@@ -51,6 +51,11 @@ export function AppShell({ children }: { children: ReactNode }) {
         </div>
       </header>
       <main className="mx-auto max-w-6xl px-6 py-8">{children}</main>
+      <footer className="mt-12 border-t">
+        <div className="mx-auto max-w-6xl px-6 py-6 text-xs text-muted-foreground">
+          © {new Date().getFullYear()} PaperPath. All rights reserved.
+        </div>
+      </footer>
     </div>
   );
 }
