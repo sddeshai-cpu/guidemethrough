@@ -147,7 +147,7 @@ function SignUpForm() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            minLength={1}
+            minLength={8}
             className="pr-10"
           />
           <button
