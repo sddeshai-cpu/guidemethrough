@@ -4,7 +4,19 @@ import { useAuth } from "@/lib/auth-context";
 import { Button } from "@/components/ui/button";
 import { BookOpen, LineChart, Sparkles } from "lucide-react";
 
-export const Route = createFileRoute("/")({ component: Landing });
+export const Route = createFileRoute("/")({
+  component: Landing,
+  head: () => ({
+    meta: [
+      { title: "Guide Me Through — Sri Lankan A/L Study Companion & AI Tutor" },
+      { name: "description", content: "Guide Me Through is the study companion for Sri Lankan A/L students: log every paper, watch your progress climb, and ask the built-in AI tutor anything." },
+      { property: "og:title", content: "Guide Me Through — Sri Lankan A/L Study Companion" },
+      { property: "og:description", content: "Track A/L progress paper-by-paper and learn with an AI tutor." },
+      { property: "og:url", content: "https://www.guidemethrough.org/" },
+    ],
+    links: [{ rel: "canonical", href: "https://www.guidemethrough.org/" }],
+  }),
+});
 
 function Landing() {
   const { user, loading } = useAuth();
