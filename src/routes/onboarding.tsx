@@ -46,7 +46,7 @@ function Inner() {
             const supabase = await getSupabase();
             const { error } = await supabase.from("profiles").update({ stream: picked }).eq("id", user.id);
             setBusy(false);
-            if (error) { toast.error(error.message); return; }
+            if (error) { toast.error(friendlyError(error)); return; }
             toast.success("Stream saved.");
             navigate({ to: "/dashboard" });
           }}

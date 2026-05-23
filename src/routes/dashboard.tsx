@@ -55,7 +55,7 @@ function DashboardInner() {
     if (name.length > 60) { toast.error("Keep it under 60 chars."); return; }
     const supabase = await getSupabase();
     const { data, error } = await supabase.from("subjects").insert({ user_id: user.id, name }).select().single();
-    if (error) { toast.error(error.message); return; }
+    if (error) { toast.error(friendlyError(error)); return; }
     setSubjects((arr) => [...arr, data as Subject]);
     setNewSubject("");
   }
@@ -193,7 +193,7 @@ function QuickAddMarkCard({ subjects, onAdded }: { subjects: Subject[]; onAdded:
                 marks: m, max_marks: mm, exam_date: date,
               });
               setBusy(false);
-              if (error) { toast.error(error.message); return; }
+              if (error) { toast.error(friendlyError(error)); return; }
               toast.success("Mark logged.");
               setExamName(""); setMarks("");
               setOpen(false);

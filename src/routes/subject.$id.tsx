@@ -65,7 +65,7 @@ function SubjectInner() {
     }));
     const { error } = await supabase.from("marks").insert(payload);
     setImporting(false);
-    if (error) { toast.error(error.message); return; }
+    if (error) { toast.error(friendlyError(error)); return; }
     toast.success(`Imported ${payload.length} mark${payload.length === 1 ? "" : "s"}.`);
     setImportOpen(false);
     setImportRows([]);
@@ -104,7 +104,7 @@ function SubjectInner() {
     if (!confirm(`Delete ${subject!.name} and all its marks?`)) return;
     const supabase = await getSupabase();
     const { error } = await supabase.from("subjects").delete().eq("id", id);
-    if (error) { toast.error(error.message); return; }
+    if (error) { toast.error(friendlyError(error)); return; }
     navigate({ to: "/dashboard" });
   }
 
@@ -119,7 +119,7 @@ function SubjectInner() {
       marks: mv, max_marks: mxv, exam_date: date,
     });
     setBusy(false);
-    if (error) { toast.error(error.message); return; }
+    if (error) { toast.error(friendlyError(error)); return; }
     const newPct = Math.round((mv / mxv) * 100);
     const prev = marks.length ? Math.round((marks[marks.length - 1].marks / marks[marks.length - 1].max_marks) * 100) : null;
     setMotivation(buildMotivation(newPct, prev));
@@ -130,7 +130,7 @@ function SubjectInner() {
   async function delMark(mid: string) {
     const supabase = await getSupabase();
     const { error } = await supabase.from("marks").delete().eq("id", mid);
-    if (error) { toast.error(error.message); return; }
+    if (error) { toast.error(friendlyError(error)); return; }
     setMarks((arr) => arr.filter((x) => x.id !== mid));
   }
 
