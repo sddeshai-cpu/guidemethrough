@@ -115,6 +115,7 @@ function SignInForm() {
 function SignUpForm() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -123,7 +124,7 @@ function SignUpForm() {
       className="mt-4 space-y-4"
       onSubmit={async (e) => {
         e.preventDefault();
-        const parsed = signUpSchema.safeParse({ username, email, password });
+        const parsed = signUpSchema.safeParse({ username, email, phone, password });
         if (!parsed.success) {
           toast.error(parsed.error.issues[0]?.message ?? "Invalid input.");
           return;
@@ -134,7 +135,7 @@ function SignUpForm() {
           email: parsed.data.email,
           password: parsed.data.password,
           options: {
-            data: { username: parsed.data.username },
+            data: { username: parsed.data.username, phone: parsed.data.phone },
             emailRedirectTo: `${window.location.origin}/dashboard`,
           },
         });
@@ -145,6 +146,7 @@ function SignUpForm() {
     >
       <div className="space-y-2"><Label>Username</Label><Input value={username} onChange={(e) => setUsername(e.target.value)} required minLength={2} maxLength={40} /></div>
       <div className="space-y-2"><Label>Email</Label><Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required /></div>
+      <div className="space-y-2"><Label>Phone number</Label><Input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} required placeholder="07XXXXXXXX" /></div>
       <div className="space-y-2">
         <Label>Password</Label>
         <div className="relative">
