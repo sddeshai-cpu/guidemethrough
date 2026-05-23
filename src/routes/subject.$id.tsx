@@ -35,6 +35,7 @@ function SubjectInner() {
   const [busy, setBusy] = useState(false);
 
   const fileRef = useRef<HTMLInputElement>(null);
+  const [motivation, setMotivation] = useState<{ title: string; message: string; tone: "up" | "down" | "steady" | "first" } | null>(null);
   const [importOpen, setImportOpen] = useState(false);
   const [importRows, setImportRows] = useState<ImportRow[]>([]);
   const [importErrors, setImportErrors] = useState<{ row: number; message: string }[]>([]);
