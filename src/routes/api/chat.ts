@@ -7,7 +7,20 @@ import { createLovableAiGatewayProvider } from "@/lib/ai-gateway";
 import { findResources } from "@/lib/study-resources";
 
 type SubjectCtx = { name: string; avg: number | null; latest: number | null; best: number | null; count: number };
-type Body = { messages?: unknown; stream?: string; subjects?: SubjectCtx[] };
+
+const SAFE_TEXT = /^[\p{L}\p{N}\s.,'&()/+\-]+$/u;
+const subjectCtxSchema = z.object({
+  name: z.string().trim().min(1).max(100).regex(SAFE_TEXT, "Invalid characters"),
+  avg: z.number().min(0).max(100).nullable(),
+  latest: z.number().min(0).max(100).nullable(),
+  best: z.number().min(0).max(100).nullable(),
+  count: z.number().int().min(0).max(1000),
+});
+const bodySchema = z.object({
+  messages: z.array(z.unknown()).min(1).max(200),
+  stream: z.string().trim().min(1).max(60).regex(SAFE_TEXT).optional(),
+  subjects: z.array(subjectCtxSchema).max(20).optional(),
+});
 
 function buildSystem(stream?: string, subjects?: SubjectCtx[]) {
   const lines: string[] = [];
@@ -66,15 +79,17 @@ export const Route = createFileRoute("/api/chat")({
           return new Response("Unauthorized", { status: 401 });
         }
 
-        let body: Body;
+        let raw: unknown;
         try {
-          body = (await request.json()) as Body;
+          raw = await request.json();
         } catch {
           return new Response("Invalid JSON", { status: 400 });
         }
-        if (!Array.isArray(body.messages)) {
-          return new Response("messages required", { status: 400 });
+        const parsed = bodySchema.safeParse(raw);
+        if (!parsed.success) {
+          return new Response("Invalid request body", { status: 400 });
         }
+        const body = parsed.data;
 
         const key = process.env.LOVABLE_API_KEY;
         if (!key) return new Response("Missing LOVABLE_API_KEY", { status: 500 });
