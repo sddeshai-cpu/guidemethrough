@@ -122,7 +122,7 @@ function SubjectInner() {
     if (error) { toast.error(error.message); return; }
     const newPct = Math.round((mv / mxv) * 100);
     const prev = marks.length ? Math.round((marks[marks.length - 1].marks / marks[marks.length - 1].max_marks) * 100) : null;
-    showMotivation(newPct, prev);
+    setMotivation(buildMotivation(newPct, prev));
     setExamName(""); setM("");
     load();
   }
