@@ -42,7 +42,7 @@ function Landing() {
       <main className="mx-auto max-w-6xl px-6 pt-16 pb-24">
         <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground">Sri Lanka · G.C.E. Advanced Level</p>
         <h1 className="mt-4 text-5xl leading-[1.05] md:text-7xl">
-          Study the A/L the way<br />a thoughtful student would.
+          Guide Me Through<br />the Sri Lankan A/L, paper by paper.
         </h1>
         <p className="mt-6 max-w-2xl text-lg text-muted-foreground">
           Pick your stream, log your subject marks paper-by-paper, watch your progress line climb,
