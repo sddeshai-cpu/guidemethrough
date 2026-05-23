@@ -79,15 +79,17 @@ export const Route = createFileRoute("/api/chat")({
           return new Response("Unauthorized", { status: 401 });
         }
 
-        let body: Body;
+        let raw: unknown;
         try {
-          body = (await request.json()) as Body;
+          raw = await request.json();
         } catch {
           return new Response("Invalid JSON", { status: 400 });
         }
-        if (!Array.isArray(body.messages)) {
-          return new Response("messages required", { status: 400 });
+        const parsed = bodySchema.safeParse(raw);
+        if (!parsed.success) {
+          return new Response("Invalid request body", { status: 400 });
         }
+        const body = parsed.data;
 
         const key = process.env.LOVABLE_API_KEY;
         if (!key) return new Response("Missing LOVABLE_API_KEY", { status: 500 });
