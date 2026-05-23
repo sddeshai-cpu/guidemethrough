@@ -58,6 +58,12 @@ function TutorInner() {
   const transport = useMemo(
     () => new DefaultChatTransport({
       api: "/api/chat",
+      headers: async () => {
+        const supabase = await getSupabase();
+        const { data } = await supabase.auth.getSession();
+        const token = data.session?.access_token;
+        return token ? { Authorization: `Bearer ${token}` } : {};
+      },
       body: () => ({ stream: stream ? streamLabel(stream) : undefined, subjects }),
     }),
     [stream, subjects],
