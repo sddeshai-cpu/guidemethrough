@@ -22,6 +22,7 @@ function TutorInner() {
   const { user } = useAuth();
   const [stream, setStream] = useState<string | null>(null);
   const [subjects, setSubjects] = useState<SubjectStat[]>([]);
+  const [showDisclaimer, setShowDisclaimer] = useState(true);
 
   useEffect(() => {
     if (!user) return;
