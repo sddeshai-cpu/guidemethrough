@@ -15,6 +15,12 @@ export const Route = createFileRoute("/auth")({ component: AuthPage });
 const signUpSchema = z.object({
   username: z.string().trim().min(2).max(40),
   email: z.string().trim().email(),
+  phone: z
+    .string()
+    .trim()
+    .min(7, "Enter a valid phone number")
+    .max(20)
+    .regex(/^[+0-9\s()-]+$/, "Phone can only contain digits, spaces, +, -, ()"),
   password: z.string().min(8, "Password must be at least 8 characters").max(72),
 });
 const signInSchema = z.object({
