@@ -309,10 +309,9 @@ function Stat({ label, value }: { label: string; value: string }) {
   );
 }
 
-function showMotivation(current: number, prev: number | null) {
+function buildMotivation(current: number, prev: number | null): { title: string; message: string; tone: "up" | "down" | "steady" | "first" } {
   if (prev === null) {
-    toast.success(`First paper logged at ${current}% — the journey begins!`);
-    return;
+    return { tone: "first", title: "The journey begins", message: `First paper logged at ${current}% — every great trajectory starts with a single mark.` };
   }
   const diff = current - prev;
   if (diff > 0) {
@@ -321,15 +320,16 @@ function showMotivation(current: number, prev: number | null) {
       `+${diff}% — keep that pen moving, the trend is yours.`,
       `${current}% and climbing. Your future self is cheering.`,
     ];
-    toast.success(ups[Math.floor(Math.random() * ups.length)]);
-  } else if (diff < 0) {
+    return { tone: "up", title: "You're rising 🚀", message: ups[Math.floor(Math.random() * ups.length)] };
+  }
+  if (diff < 0) {
     const downs = [
       `Down ${Math.abs(diff)}% — every dip is data. Review, reset, rise.`,
-      `A slip, not a fall. One paper doesn't define August.`,
+      `A slip, not a fall. One paper doesn't define you.`,
       `${current}% today. Find one mistake to fix and the next one will tell a different story.`,
     ];
-    toast(downs[Math.floor(Math.random() * downs.length)]);
-  } else {
-    toast(`Steady at ${current}%. Consistency is a quiet superpower.`);
+    return { tone: "down", title: "Dip today, climb tomorrow", message: downs[Math.floor(Math.random() * downs.length)] };
   }
+  return { tone: "steady", title: "Holding steady", message: `Steady at ${current}%. Consistency is a quiet superpower.` };
 }
+
