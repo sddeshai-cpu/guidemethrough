@@ -307,3 +307,28 @@ function Stat({ label, value }: { label: string; value: string }) {
     </div>
   );
 }
+
+function showMotivation(current: number, prev: number | null) {
+  if (prev === null) {
+    toast.success(`First paper logged at ${current}% — the journey begins!`);
+    return;
+  }
+  const diff = current - prev;
+  if (diff > 0) {
+    const ups = [
+      `Up ${diff}% from last paper — momentum is building!`,
+      `+${diff}% — keep that pen moving, the trend is yours.`,
+      `${current}% and climbing. Your future self is cheering.`,
+    ];
+    toast.success(ups[Math.floor(Math.random() * ups.length)]);
+  } else if (diff < 0) {
+    const downs = [
+      `Down ${Math.abs(diff)}% — every dip is data. Review, reset, rise.`,
+      `A slip, not a fall. One paper doesn't define August.`,
+      `${current}% today. Find one mistake to fix and the next one will tell a different story.`,
+    ];
+    toast(downs[Math.floor(Math.random() * downs.length)]);
+  } else {
+    toast(`Steady at ${current}%. Consistency is a quiet superpower.`);
+  }
+}
