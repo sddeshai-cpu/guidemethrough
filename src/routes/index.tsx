@@ -4,7 +4,19 @@ import { useAuth } from "@/lib/auth-context";
 import { Button } from "@/components/ui/button";
 import { BookOpen, LineChart, Sparkles } from "lucide-react";
 
-export const Route = createFileRoute("/")({ component: Landing });
+export const Route = createFileRoute("/")({
+  component: Landing,
+  head: () => ({
+    meta: [
+      { title: "Guide Me Through — Sri Lankan A/L Study Companion & AI Tutor" },
+      { name: "description", content: "Guide Me Through is the study companion for Sri Lankan A/L students: log every paper, watch your progress climb, and ask the built-in AI tutor anything." },
+      { property: "og:title", content: "Guide Me Through — Sri Lankan A/L Study Companion" },
+      { property: "og:description", content: "Track A/L progress paper-by-paper and learn with an AI tutor." },
+      { property: "og:url", content: "https://www.guidemethrough.org/" },
+    ],
+    links: [{ rel: "canonical", href: "https://www.guidemethrough.org/" }],
+  }),
+});
 
 function Landing() {
   const { user, loading } = useAuth();
@@ -30,7 +42,7 @@ function Landing() {
       <main className="mx-auto max-w-6xl px-6 pt-16 pb-24">
         <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground">Sri Lanka · G.C.E. Advanced Level</p>
         <h1 className="mt-4 text-5xl leading-[1.05] md:text-7xl">
-          Study the A/L the way<br />a thoughtful student would.
+          Guide Me Through<br />the Sri Lankan A/L, paper by paper.
         </h1>
         <p className="mt-6 max-w-2xl text-lg text-muted-foreground">
           Pick your stream, log your subject marks paper-by-paper, watch your progress line climb,
