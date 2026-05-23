@@ -94,6 +94,18 @@ function RootComponent() {
       <AuthProvider>
         <Outlet />
         <Toaster richColors position="top-center" />
+        <a
+          href="https://wa.me/94768533739?text=Hello%2C%20I%20have%20a%20complaint"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Complain via WhatsApp"
+          title="Complain via WhatsApp: 076 853 3739"
+          className="fixed bottom-5 right-5 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg transition-transform hover:scale-110 hover:bg-[#1ebe57]"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" className="h-7 w-7" fill="currentColor" aria-hidden="true">
+            <path d="M19.11 17.27c-.27-.14-1.62-.8-1.87-.89-.25-.09-.44-.14-.62.14-.18.27-.71.89-.87 1.07-.16.18-.32.2-.59.07-.27-.14-1.15-.42-2.19-1.35-.81-.72-1.36-1.61-1.52-1.88-.16-.27-.02-.42.12-.55.12-.12.27-.32.41-.48.14-.16.18-.27.27-.45.09-.18.05-.34-.02-.48-.07-.14-.62-1.49-.85-2.04-.22-.54-.45-.46-.62-.47l-.53-.01c-.18 0-.48.07-.73.34-.25.27-.96.94-.96 2.29 0 1.35.99 2.66 1.12 2.84.14.18 1.95 2.98 4.73 4.18.66.28 1.18.45 1.58.58.66.21 1.27.18 1.74.11.53-.08 1.62-.66 1.85-1.3.23-.64.23-1.18.16-1.3-.07-.12-.25-.18-.52-.32zM16.03 5.33C10.13 5.33 5.33 10.12 5.33 16c0 1.88.49 3.71 1.43 5.33L5.33 26.67l5.49-1.41a10.7 10.7 0 0 0 5.21 1.34h.01c5.9 0 10.7-4.79 10.7-10.67 0-2.85-1.11-5.53-3.13-7.54a10.62 10.62 0 0 0-7.58-3.06zm0 19.55h-.01a8.83 8.83 0 0 1-4.5-1.23l-.32-.19-3.26.84.87-3.17-.21-.33a8.86 8.86 0 0 1-1.36-4.7c0-4.89 4-8.88 8.91-8.88 2.38 0 4.61.93 6.29 2.6a8.81 8.81 0 0 1 2.61 6.29c0 4.89-4 8.87-8.92 8.87z"/>
+          </svg>
+        </a>
       </AuthProvider>
     </QueryClientProvider>
   );
