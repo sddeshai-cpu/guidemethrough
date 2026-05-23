@@ -35,6 +35,7 @@ function SubjectInner() {
   const [busy, setBusy] = useState(false);
 
   const fileRef = useRef<HTMLInputElement>(null);
+  const [motivation, setMotivation] = useState<{ title: string; message: string; tone: "up" | "down" | "steady" | "first" } | null>(null);
   const [importOpen, setImportOpen] = useState(false);
   const [importRows, setImportRows] = useState<ImportRow[]>([]);
   const [importErrors, setImportErrors] = useState<{ row: number; message: string }[]>([]);
@@ -121,7 +122,7 @@ function SubjectInner() {
     if (error) { toast.error(error.message); return; }
     const newPct = Math.round((mv / mxv) * 100);
     const prev = marks.length ? Math.round((marks[marks.length - 1].marks / marks[marks.length - 1].max_marks) * 100) : null;
-    showMotivation(newPct, prev);
+    setMotivation(buildMotivation(newPct, prev));
     setExamName(""); setM("");
     load();
   }
@@ -295,9 +296,30 @@ function SubjectInner() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <Dialog open={!!motivation} onOpenChange={(o) => !o && setMotivation(null)}>
+        <DialogContent className="max-w-sm text-center">
+          <DialogHeader>
+            <div className="mx-auto mb-2 text-4xl">
+              {motivation?.tone === "up" && "📈"}
+              {motivation?.tone === "down" && "💪"}
+              {motivation?.tone === "steady" && "🎯"}
+              {motivation?.tone === "first" && "✨"}
+            </div>
+            <DialogTitle className="serif text-2xl">{motivation?.title}</DialogTitle>
+            <DialogDescription className="text-base text-foreground/80">
+              {motivation?.message}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="sm:justify-center">
+            <Button onClick={() => setMotivation(null)}>Keep going</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
+
 
 function Stat({ label, value }: { label: string; value: string }) {
   return (
@@ -308,10 +330,9 @@ function Stat({ label, value }: { label: string; value: string }) {
   );
 }
 
-function showMotivation(current: number, prev: number | null) {
+function buildMotivation(current: number, prev: number | null): { title: string; message: string; tone: "up" | "down" | "steady" | "first" } {
   if (prev === null) {
-    toast.success(`First paper logged at ${current}% — the journey begins!`);
-    return;
+    return { tone: "first", title: "The journey begins", message: `First paper logged at ${current}% — every great trajectory starts with a single mark.` };
   }
   const diff = current - prev;
   if (diff > 0) {
@@ -320,15 +341,16 @@ function showMotivation(current: number, prev: number | null) {
       `+${diff}% — keep that pen moving, the trend is yours.`,
       `${current}% and climbing. Your future self is cheering.`,
     ];
-    toast.success(ups[Math.floor(Math.random() * ups.length)]);
-  } else if (diff < 0) {
+    return { tone: "up", title: "You're rising 🚀", message: ups[Math.floor(Math.random() * ups.length)] };
+  }
+  if (diff < 0) {
     const downs = [
       `Down ${Math.abs(diff)}% — every dip is data. Review, reset, rise.`,
-      `A slip, not a fall. One paper doesn't define August.`,
+      `A slip, not a fall. One paper doesn't define you.`,
       `${current}% today. Find one mistake to fix and the next one will tell a different story.`,
     ];
-    toast(downs[Math.floor(Math.random() * downs.length)]);
-  } else {
-    toast(`Steady at ${current}%. Consistency is a quiet superpower.`);
+    return { tone: "down", title: "Dip today, climb tomorrow", message: downs[Math.floor(Math.random() * downs.length)] };
   }
+  return { tone: "steady", title: "Holding steady", message: `Steady at ${current}%. Consistency is a quiet superpower.` };
 }
+
