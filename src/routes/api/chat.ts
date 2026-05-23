@@ -92,7 +92,10 @@ export const Route = createFileRoute("/api/chat")({
         const body = parsed.data;
 
         const key = process.env.LOVABLE_API_KEY;
-        if (!key) return new Response("Missing LOVABLE_API_KEY", { status: 500 });
+        if (!key) {
+          console.error("Missing LOVABLE_API_KEY environment variable");
+          return new Response("Server configuration error", { status: 500 });
+        }
 
         const gateway = createLovableAiGatewayProvider(key);
         const model = gateway("google/gemini-3-flash-preview");
