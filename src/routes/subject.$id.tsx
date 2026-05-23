@@ -296,9 +296,30 @@ function SubjectInner() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <Dialog open={!!motivation} onOpenChange={(o) => !o && setMotivation(null)}>
+        <DialogContent className="max-w-sm text-center">
+          <DialogHeader>
+            <div className="mx-auto mb-2 text-4xl">
+              {motivation?.tone === "up" && "📈"}
+              {motivation?.tone === "down" && "💪"}
+              {motivation?.tone === "steady" && "🎯"}
+              {motivation?.tone === "first" && "✨"}
+            </div>
+            <DialogTitle className="serif text-2xl">{motivation?.title}</DialogTitle>
+            <DialogDescription className="text-base text-foreground/80">
+              {motivation?.message}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="sm:justify-center">
+            <Button onClick={() => setMotivation(null)}>Keep going</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
+
 
 function Stat({ label, value }: { label: string; value: string }) {
   return (
