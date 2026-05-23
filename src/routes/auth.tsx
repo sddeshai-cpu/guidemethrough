@@ -14,7 +14,7 @@ export const Route = createFileRoute("/auth")({ component: AuthPage });
 const signUpSchema = z.object({
   username: z.string().trim().min(2).max(40),
   email: z.string().trim().email(),
-  password: z.string().min(6).max(72),
+  password: z.string().min(1).max(72),
 });
 const signInSchema = z.object({
   email: z.string().trim().email(),
@@ -117,7 +117,7 @@ function SignUpForm() {
     >
       <div className="space-y-2"><Label>Username</Label><Input value={username} onChange={(e) => setUsername(e.target.value)} required minLength={2} maxLength={40} /></div>
       <div className="space-y-2"><Label>Email</Label><Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required /></div>
-      <div className="space-y-2"><Label>Password</Label><Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6} /></div>
+      <div className="space-y-2"><Label>Password</Label><Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={1} /></div>
       <Button className="w-full" disabled={busy}>{busy ? "Creating account…" : "Create account"}</Button>
     </form>
   );
