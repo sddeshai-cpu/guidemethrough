@@ -58,7 +58,7 @@ function TutorInner() {
   const transport = useMemo(
     () => new DefaultChatTransport({
       api: "/api/chat",
-      headers: async () => {
+      headers: async (): Promise<Record<string, string>> => {
         const supabase = await getSupabase();
         const { data } = await supabase.auth.getSession();
         const token = data.session?.access_token;
