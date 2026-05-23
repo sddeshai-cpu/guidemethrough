@@ -1,6 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
+import { friendlyError } from "@/lib/error-messages";
 import { AppShell } from "@/components/AppShell";
 import { getSupabase } from "@/lib/supabase-browser";
 import { useAuth } from "@/lib/auth-context";

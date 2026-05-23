@@ -1,6 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { friendlyError } from "@/lib/error-messages";
 import { Plus, TrendingUp, TrendingDown, Minus, FileDown, FileText } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { getSupabase } from "@/lib/supabase-browser";
