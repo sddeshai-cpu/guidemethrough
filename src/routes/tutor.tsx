@@ -87,6 +87,21 @@ function TutorInner() {
 
   return (
     <div className="flex h-[calc(100vh-9rem)] flex-col">
+      <Dialog open={showDisclaimer} onOpenChange={setShowDisclaimer}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>A quick heads-up</DialogTitle>
+            <DialogDescription className="pt-2 text-sm leading-relaxed">
+              The AI Tutor isn't human — it can make mistakes and may not always be
+              accurate. Use its answers as a starting point, and double-check important
+              facts with your teacher, textbook, or trusted sources.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button onClick={() => setShowDisclaimer(false)}>I understand</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
       <div className="flex items-center gap-3">
         <div className="grid h-10 w-10 place-items-center rounded-md bg-primary text-primary-foreground">
           <Sparkles className="h-5 w-5" />
