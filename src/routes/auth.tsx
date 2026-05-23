@@ -15,7 +15,7 @@ export const Route = createFileRoute("/auth")({ component: AuthPage });
 const signUpSchema = z.object({
   username: z.string().trim().min(2).max(40),
   email: z.string().trim().email(),
-  password: z.string().min(1).max(72),
+  password: z.string().min(8, "Password must be at least 8 characters").max(72),
 });
 const signInSchema = z.object({
   email: z.string().trim().email(),
