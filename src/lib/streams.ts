@@ -3,6 +3,7 @@ export const STREAMS = [
   { id: "biology", label: "Biological Science", blurb: "Biology · Physics · Chemistry" },
   { id: "technology", label: "Technology", blurb: "SFT / ET · ICT · Science for Tech" },
   { id: "commerce", label: "Commerce", blurb: "Accounting · Business Studies · Economics" },
+  { id: "arts", label: "Arts", blurb: "Languages · Humanities · Social Sciences" },
 ] as const;
 
 export type StreamId = (typeof STREAMS)[number]["id"];
