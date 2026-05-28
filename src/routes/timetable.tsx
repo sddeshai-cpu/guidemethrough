@@ -77,9 +77,9 @@ function TimetableInner() {
     <div>
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground">Plan your day</p>
-          <h1 className="mt-1 text-4xl">Timetable</h1>
-          <p className="mt-1 text-muted-foreground">Block out your study day, then download it as a PDF.</p>
+          <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground sm:text-sm">Plan your day</p>
+          <h1 className="mt-1 text-3xl sm:text-4xl">Timetable</h1>
+          <p className="mt-1 text-sm text-muted-foreground sm:text-base">Block out your study day, then download it as a PDF.</p>
         </div>
         <div className="flex flex-wrap items-end gap-2">
           <div className="space-y-1">
@@ -118,8 +118,8 @@ function TimetableInner() {
           <p className="mt-1 text-sm text-muted-foreground">Add your first time block above.</p>
         </div>
       ) : (
-        <div className="mt-8 overflow-hidden rounded-lg border bg-card">
-          <table className="w-full text-sm">
+        <div className="mt-8 overflow-x-auto rounded-lg border bg-card">
+          <table className="w-full min-w-[480px] text-sm">
             <thead className="border-b bg-muted/40 text-left text-xs uppercase tracking-wider text-muted-foreground">
               <tr>
                 <th className="px-4 py-3">Time</th>

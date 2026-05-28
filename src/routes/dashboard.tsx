@@ -65,9 +65,9 @@ function DashboardInner() {
     <div>
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground">{streamLabel(profile?.stream)} Stream</p>
-          <h1 className="mt-1 text-4xl">Hi, {profile?.username}.</h1>
-          <p className="mt-1 text-muted-foreground">Here are your subjects and how each is trending.</p>
+          <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground sm:text-sm">{streamLabel(profile?.stream)} Stream</p>
+          <h1 className="mt-1 text-3xl sm:text-4xl">Hi, {profile?.username}.</h1>
+          <p className="mt-1 text-sm text-muted-foreground sm:text-base">Here are your subjects and how each is trending.</p>
         </div>
         <div className="flex flex-wrap gap-2">
           <Button variant="outline" size="sm" onClick={() => {
