@@ -92,7 +92,7 @@ function TutorInner() {
       ];
 
   return (
-    <div className="flex h-[calc(100vh-9rem)] flex-col">
+    <div className="flex h-[calc(100vh-8rem)] flex-col sm:h-[calc(100vh-9rem)]">
       <Dialog open={showDisclaimer} onOpenChange={setShowDisclaimer}>
         <DialogContent>
           <DialogHeader>

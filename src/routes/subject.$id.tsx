@@ -142,8 +142,8 @@ function SubjectInner() {
       </Link>
       <div className="mt-2 flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground">Subject</p>
-          <h1 className="mt-1 text-4xl">{subject.name}</h1>
+          <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground sm:text-sm">Subject</p>
+          <h1 className="mt-1 text-3xl break-words sm:text-4xl">{subject.name}</h1>
         </div>
         <div className="flex flex-wrap gap-2">
           <input ref={fileRef} type="file" accept=".csv,.xlsx,.xls,text/csv,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" className="hidden" onChange={onFilePicked} />
