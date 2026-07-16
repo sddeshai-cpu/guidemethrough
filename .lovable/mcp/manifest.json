@@ -1,0 +1,127 @@
+{
+  "version": 1,
+  "sdk_version": "0.22.2",
+  "path": "/mcp",
+  "auth": {
+    "type": "oauth",
+    "issuer": "https://uhkcnsnmqqhqzecidxuf.supabase.co/auth/v1",
+    "accepted_audiences": [
+      "authenticated"
+    ]
+  },
+  "mcp": {
+    "server": {
+      "name": "guide-me-through-mcp",
+      "version": "0.1.0",
+      "title": "Guide Me Through"
+    },
+    "tools": [
+      {
+        "name": "list_subjects",
+        "title": "List subjects",
+        "description": "List the signed-in student's A/L subjects.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_marks",
+        "title": "List marks",
+        "description": "List exam marks for the signed-in student. Optionally filter by subject_id.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "subject_id": {
+              "type": "string",
+              "format": "uuid",
+              "description": "Optional subject id to filter marks."
+            }
+          },
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "add_mark",
+        "title": "Add mark",
+        "description": "Log a new exam mark for one of the signed-in student's subjects.",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": false,
+          "idempotentHint": false,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "subject_id": {
+              "type": "string",
+              "format": "uuid",
+              "description": "Subject id the mark belongs to."
+            },
+            "exam_name": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120,
+              "description": "Exam or paper name."
+            },
+            "exam_date": {
+              "type": "string",
+              "description": "Exam date in YYYY-MM-DD format."
+            },
+            "marks": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Marks scored."
+            },
+            "max_marks": {
+              "type": "number",
+              "minimum": 1,
+              "default": 100,
+              "description": "Total possible marks (defaults to 100)."
+            }
+          },
+          "required": [
+            "subject_id",
+            "exam_name",
+            "exam_date",
+            "marks"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_profile",
+        "title": "Get profile",
+        "description": "Return the signed-in student's profile (username, stream).",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}
