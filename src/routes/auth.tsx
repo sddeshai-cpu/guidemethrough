@@ -124,6 +124,7 @@ function SignInForm() {
 }
 
 function SignUpForm() {
+  const { next } = Route.useSearch();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -147,7 +148,7 @@ function SignUpForm() {
           password: parsed.data.password,
           options: {
             data: { username: parsed.data.username, phone: parsed.data.phone },
-            emailRedirectTo: `${window.location.origin}/dashboard`,
+            emailRedirectTo: `${window.location.origin}${next ?? "/dashboard"}`,
           },
         });
         setBusy(false);
