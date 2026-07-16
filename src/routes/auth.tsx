@@ -10,7 +10,12 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Eye, EyeOff } from "lucide-react";
 
-export const Route = createFileRoute("/auth")({ component: AuthPage });
+export const Route = createFileRoute("/auth")({
+  validateSearch: (s: Record<string, unknown>) => ({
+    next: typeof s.next === "string" && s.next.startsWith("/") && !s.next.startsWith("//") ? s.next : undefined,
+  }),
+  component: AuthPage,
+});
 
 const signUpSchema = z.object({
   username: z.string().trim().min(2).max(40),
@@ -31,7 +36,13 @@ const signInSchema = z.object({
 function AuthPage() {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
-  useEffect(() => { if (!loading && user) navigate({ to: "/dashboard" }); }, [loading, user, navigate]);
+  const { next } = Route.useSearch();
+  useEffect(() => {
+    if (!loading && user) {
+      if (next) window.location.replace(next);
+      else navigate({ to: "/dashboard" });
+    }
+  }, [loading, user, navigate, next]);
 
   return (
     <div className="min-h-screen bg-background">
