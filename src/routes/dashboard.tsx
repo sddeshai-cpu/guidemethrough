@@ -17,7 +17,20 @@ type Profile = { id: string; username: string; stream: string | null };
 type Subject = { id: string; name: string };
 type Mark = { id: string; subject_id: string; exam_name: string; marks: number; max_marks: number; exam_date: string };
 
-export const Route = createFileRoute("/dashboard")({ component: () => <AppShell><DashboardInner /></AppShell> });
+export const Route = createFileRoute("/dashboard")({
+  component: () => <AppShell><DashboardInner /></AppShell>,
+  head: () => ({
+    meta: [
+      { title: "Study Dashboard — Track A/L Marks | Guide Me Through" },
+      { name: "description", content: "See every A/L subject in your stream, log paper marks and follow your progress trends in one study dashboard." },
+      { property: "og:title", content: "Study Dashboard — Track A/L Marks | Guide Me Through" },
+      { property: "og:description", content: "Track marks and progress across all your A/L subjects." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+    links: [{ rel: "canonical", href: "https://www.guidemethrough.org/dashboard" }],
+  }),
+});
 
 function DashboardInner() {
   const { user } = useAuth();
