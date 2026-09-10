@@ -52,7 +52,8 @@ function Landing() {
           <Link to="/auth" className="w-full sm:w-auto"><Button size="lg" className="w-full sm:w-auto">Create your study journal</Button></Link>
         </div>
 
-        <div className="mt-14 grid gap-4 sm:mt-20 sm:gap-6 md:grid-cols-3">
+        <h2 className="mt-14 text-2xl sm:mt-20 sm:text-3xl">Everything you need for A/L prep</h2>
+        <div className="mt-6 grid gap-4 sm:gap-6 md:grid-cols-3">
           {[
             { icon: BookOpen, t: "Your stream, your subjects", d: "Physical Science, Biology, Technology or Commerce — then add whichever subjects you actually sit." },
             { icon: LineChart, t: "Progress you can see", d: "Every paper, term test and model paper plotted so you know if you're trending up." },

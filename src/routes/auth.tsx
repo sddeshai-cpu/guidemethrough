@@ -60,7 +60,7 @@ function AuthPage() {
         </div>
         <div className="flex items-center justify-center p-6 sm:p-12">
           <div className="w-full max-w-sm">
-            <h1 className="text-3xl">Welcome</h1>
+            <h1 className="text-3xl">Sign in to PaperPath</h1>
             <p className="mt-1 text-sm text-muted-foreground">Sign in or create your account.</p>
             <Tabs defaultValue="signin" className="mt-6">
               <TabsList className="grid w-full grid-cols-2">

@@ -200,7 +200,7 @@ function TutorInner() {
           placeholder="Ask anything about your A/L subjects…"
           className="min-h-[52px] resize-none"
         />
-        <Button type="submit" disabled={busy || !input.trim()} size="lg">
+        <Button type="submit" disabled={busy || !input.trim()} size="lg" aria-label="Send message">
           <Send className="h-4 w-4" />
         </Button>
       </form>

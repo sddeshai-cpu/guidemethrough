@@ -135,7 +135,7 @@ function TimetableInner() {
                   <td className="px-4 py-3">{b.activity}</td>
                   <td className="px-4 py-3 text-muted-foreground">{b.notes || "—"}</td>
                   <td className="px-4 py-3 text-right">
-                    <Button variant="ghost" size="sm" onClick={() => remove(b.id)}>
+                    <Button variant="ghost" size="sm" aria-label={`Delete ${b.activity}`} onClick={() => remove(b.id)}>
                       <Trash2 className="h-4 w-4" />
                     </Button>
                   </td>
