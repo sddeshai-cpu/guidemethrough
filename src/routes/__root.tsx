@@ -57,6 +57,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
+      { name: "google-site-verification", content: "q9MZnUToIVbASSw9n8BOj3Az0pWLWdXFo8dGF0eHaRE" },
       { title: "Guide Me Through — Sri Lankan A/L Study Companion" },
       { name: "description", content: "Guide Me Through helps Sri Lankan A/L students track marks paper-by-paper, plan revision, and learn with an AI tutor across Physical Science, Bio, Tech and Commerce streams." },
       { name: "keywords", content: "guide me through, guidemethrough, Sri Lanka A/L, Advanced Level, AL study app, AL tutor, AL progress tracker" },
