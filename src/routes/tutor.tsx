@@ -12,7 +12,20 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 
-export const Route = createFileRoute("/tutor")({ component: () => <AppShell><TutorInner /></AppShell> });
+export const Route = createFileRoute("/tutor")({
+  component: () => <AppShell><TutorInner /></AppShell>,
+  head: () => ({
+    meta: [
+      { title: "AI Tutor for A/L Subjects | Guide Me Through" },
+      { name: "description", content: "Ask the Guide Me Through AI tutor questions on your Sri Lankan A/L subjects and get explanations with cited study resources." },
+      { property: "og:title", content: "AI Tutor for A/L Subjects | Guide Me Through" },
+      { property: "og:description", content: "Get subject-aware answers and study tips for Sri Lankan A/L exams." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+    links: [{ rel: "canonical", href: "https://www.guidemethrough.org/tutor" }],
+  }),
+});
 
 type SubjectStat = { name: string; avg: number | null; latest: number | null; best: number | null; count: number };
 type StudyResource = { title: string; url: string; note: string };

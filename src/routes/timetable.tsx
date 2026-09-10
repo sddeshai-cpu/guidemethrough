@@ -14,6 +14,17 @@ type Block = { id: string; start: string; end: string; activity: string; notes: 
 
 export const Route = createFileRoute("/timetable")({
   component: () => <AppShell><TimetableInner /></AppShell>,
+  head: () => ({
+    meta: [
+      { title: "Daily Study Timetable Planner | Guide Me Through" },
+      { name: "description", content: "Plan your A/L study day block by block, add notes for each session and download your timetable as a PDF." },
+      { property: "og:title", content: "Daily Study Timetable Planner | Guide Me Through" },
+      { property: "og:description", content: "Build a daily A/L study schedule and export it as a PDF." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+    links: [{ rel: "canonical", href: "https://www.guidemethrough.org/timetable" }],
+  }),
 });
 
 function storageKey(uid: string, date: string) {
