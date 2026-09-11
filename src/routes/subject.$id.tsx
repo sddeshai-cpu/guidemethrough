@@ -19,6 +19,17 @@ type Mark = { id: string; exam_name: string; marks: number; max_marks: number; e
 
 export const Route = createFileRoute("/subject/$id")({
   component: () => <AppShell><SubjectInner /></AppShell>,
+  head: () => ({
+    meta: [
+      { title: "Subject Progress & Marks | Guide Me Through" },
+      { name: "description", content: "Log paper marks for an A/L subject, follow your progression chart and export a PDF or CSV report." },
+      { property: "og:title", content: "Subject Progress & Marks | Guide Me Through" },
+      { property: "og:description", content: "Track marks and progression for a single A/L subject." },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://www.guidemethrough.org/dashboard" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
 });
 
 function SubjectInner() {

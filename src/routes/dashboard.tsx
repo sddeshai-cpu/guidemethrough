@@ -26,6 +26,7 @@ export const Route = createFileRoute("/dashboard")({
       { property: "og:title", content: "Study Dashboard — Track A/L Marks | Guide Me Through" },
       { property: "og:description", content: "Track marks and progress across all your A/L subjects." },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://www.guidemethrough.org/dashboard" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [{ rel: "canonical", href: "https://www.guidemethrough.org/dashboard" }],

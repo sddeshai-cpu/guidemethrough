@@ -15,6 +15,18 @@ export const Route = createFileRoute("/auth")({
     next: typeof s.next === "string" && s.next.startsWith("/") && !s.next.startsWith("//") ? s.next : undefined,
   }),
   component: AuthPage,
+  head: () => ({
+    meta: [
+      { title: "Sign in or Create an Account | Guide Me Through" },
+      { name: "description", content: "Sign in or create a free Guide Me Through account to track your Sri Lankan A/L marks and use the AI tutor." },
+      { property: "og:title", content: "Sign in or Create an Account | Guide Me Through" },
+      { property: "og:description", content: "Access your A/L marks dashboard, timetable planner and AI tutor." },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://www.guidemethrough.org/auth" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+    links: [{ rel: "canonical", href: "https://www.guidemethrough.org/auth" }],
+  }),
 });
 
 const signUpSchema = z.object({

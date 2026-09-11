@@ -21,6 +21,7 @@ export const Route = createFileRoute("/timetable")({
       { property: "og:title", content: "Daily Study Timetable Planner | Guide Me Through" },
       { property: "og:description", content: "Build a daily A/L study schedule and export it as a PDF." },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://www.guidemethrough.org/timetable" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [{ rel: "canonical", href: "https://www.guidemethrough.org/timetable" }],
