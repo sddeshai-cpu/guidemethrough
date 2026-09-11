@@ -8,7 +8,21 @@ import { useAuth } from "@/lib/auth-context";
 import { STREAMS, type StreamId } from "@/lib/streams";
 import { Button } from "@/components/ui/button";
 
-export const Route = createFileRoute("/onboarding")({ component: Onboarding });
+export const Route = createFileRoute("/onboarding")({
+  component: Onboarding,
+  head: () => ({
+    meta: [
+      { title: "Choose Your A/L Stream | Guide Me Through" },
+      { name: "description", content: "Pick your Sri Lankan A/L stream — Physical Science, Biology, Technology, Commerce or Arts — to personalise marks tracking and tutoring." },
+      { property: "og:title", content: "Choose Your A/L Stream | Guide Me Through" },
+      { property: "og:description", content: "Pick your A/L stream to personalise marks tracking and the AI tutor." },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://www.guidemethrough.org/onboarding" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+    links: [{ rel: "canonical", href: "https://www.guidemethrough.org/onboarding" }],
+  }),
+});
 
 function Onboarding() {
   return <AppShell><Inner /></AppShell>;
