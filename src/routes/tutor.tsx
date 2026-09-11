@@ -21,6 +21,7 @@ export const Route = createFileRoute("/tutor")({
       { property: "og:title", content: "AI Tutor for A/L Subjects | Guide Me Through" },
       { property: "og:description", content: "Get subject-aware answers and study tips for Sri Lankan A/L exams." },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://www.guidemethrough.org/tutor" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [{ rel: "canonical", href: "https://www.guidemethrough.org/tutor" }],
