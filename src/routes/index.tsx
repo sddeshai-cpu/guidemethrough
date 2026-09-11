@@ -34,8 +34,8 @@ function Landing() {
           <span className="serif text-lg sm:text-xl">PaperPath</span>
         </div>
         <div className="flex gap-1 sm:gap-2">
-          <Link to="/auth"><Button variant="ghost" size="sm" className="sm:h-9 sm:px-4">Sign in</Button></Link>
-          <Link to="/auth"><Button size="sm" className="sm:h-9 sm:px-4">Get started</Button></Link>
+          <Link to="/auth" search={{}}><Button variant="ghost" size="sm" className="sm:h-9 sm:px-4">Sign in</Button></Link>
+          <Link to="/auth" search={{}}><Button size="sm" className="sm:h-9 sm:px-4">Get started</Button></Link>
         </div>
       </header>
 
@@ -49,7 +49,7 @@ function Landing() {
           and ask the AI tutor whenever a concept doesn't sit right.
         </p>
         <div className="mt-7 flex gap-3 sm:mt-8">
-          <Link to="/auth" className="w-full sm:w-auto"><Button size="lg" className="w-full sm:w-auto">Create your study journal</Button></Link>
+          <Link to="/auth" search={{}} className="w-full sm:w-auto"><Button size="lg" className="w-full sm:w-auto">Create your study journal</Button></Link>
         </div>
 
         <h2 className="mt-14 text-2xl sm:mt-20 sm:text-3xl">Everything you need for A/L prep</h2>
