@@ -1,5 +1,5 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import { LayoutDashboard, MessageCircle, LogOut, CalendarClock } from "lucide-react";
+import { LayoutDashboard, MessageCircle, LogOut, CalendarClock, Timer } from "lucide-react";
 import type { ReactNode } from "react";
 import { useEffect } from "react";
 import { useAuth } from "@/lib/auth-context";
@@ -21,6 +21,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   const nav = [
     { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
     { to: "/timetable", label: "Timetable", icon: CalendarClock },
+    { to: "/timer", label: "Timer", icon: Timer },
     { to: "/tutor", label: "AI Tutor", icon: MessageCircle },
   ];
 

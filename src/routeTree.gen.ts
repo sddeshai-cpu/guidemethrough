@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TutorRouteImport } from './routes/tutor'
 import { Route as TimetableRouteImport } from './routes/timetable'
+import { Route as TimerRouteImport } from './routes/timer'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as McpRouteImport } from './routes/mcp'
@@ -33,6 +34,11 @@ const TutorRoute = TutorRouteImport.update({
 const TimetableRoute = TimetableRouteImport.update({
   id: '/timetable',
   path: '/timetable',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TimerRoute = TimerRouteImport.update({
+  id: '/timer',
+  path: '/timer',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
@@ -112,6 +118,7 @@ export interface FileRoutesByFullPath {
   '/mcp': typeof McpRoute
   '/onboarding': typeof OnboardingRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/timer': typeof TimerRoute
   '/timetable': typeof TimetableRoute
   '/tutor': typeof TutorRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
@@ -129,6 +136,7 @@ export interface FileRoutesByTo {
   '/mcp': typeof McpRoute
   '/onboarding': typeof OnboardingRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/timer': typeof TimerRoute
   '/timetable': typeof TimetableRoute
   '/tutor': typeof TutorRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
@@ -147,6 +155,7 @@ export interface FileRoutesById {
   '/mcp': typeof McpRoute
   '/onboarding': typeof OnboardingRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/timer': typeof TimerRoute
   '/timetable': typeof TimetableRoute
   '/tutor': typeof TutorRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
@@ -166,6 +175,7 @@ export interface FileRouteTypes {
     | '/mcp'
     | '/onboarding'
     | '/sitemap.xml'
+    | '/timer'
     | '/timetable'
     | '/tutor'
     | '/.mcp/list-tools'
@@ -183,6 +193,7 @@ export interface FileRouteTypes {
     | '/mcp'
     | '/onboarding'
     | '/sitemap.xml'
+    | '/timer'
     | '/timetable'
     | '/tutor'
     | '/.mcp/list-tools'
@@ -200,6 +211,7 @@ export interface FileRouteTypes {
     | '/mcp'
     | '/onboarding'
     | '/sitemap.xml'
+    | '/timer'
     | '/timetable'
     | '/tutor'
     | '/.mcp/list-tools'
@@ -218,6 +230,7 @@ export interface RootRouteChildren {
   McpRoute: typeof McpRoute
   OnboardingRoute: typeof OnboardingRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  TimerRoute: typeof TimerRoute
   TimetableRoute: typeof TimetableRoute
   TutorRoute: typeof TutorRoute
   Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
@@ -243,6 +256,13 @@ declare module '@tanstack/react-router' {
       path: '/timetable'
       fullPath: '/timetable'
       preLoaderRoute: typeof TimetableRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/timer': {
+      id: '/timer'
+      path: '/timer'
+      fullPath: '/timer'
+      preLoaderRoute: typeof TimerRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sitemap.xml': {
@@ -346,6 +366,7 @@ const rootRouteChildren: RootRouteChildren = {
   McpRoute: McpRoute,
   OnboardingRoute: OnboardingRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  TimerRoute: TimerRoute,
   TimetableRoute: TimetableRoute,
   TutorRoute: TutorRoute,
   Char91DotmcpChar93ListToolsRoute: Char91DotmcpChar93ListToolsRoute,
