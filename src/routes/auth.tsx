@@ -94,6 +94,51 @@ function SignInForm() {
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [forgotMode, setForgotMode] = useState(false);
+  const [resetSent, setResetSent] = useState(false);
+
+  if (forgotMode) {
+    return (
+      <form
+        className="mt-4 space-y-4"
+        onSubmit={async (e) => {
+          e.preventDefault();
+          const parsed = z.string().trim().email().safeParse(email);
+          if (!parsed.success) { toast.error("Enter a valid email address."); return; }
+          setBusy(true);
+          const supabase = await getSupabase();
+          const { error } = await supabase.auth.resetPasswordForEmail(parsed.data, {
+            redirectTo: `${window.location.origin}/reset-password`,
+          });
+          setBusy(false);
+          if (error) toast.error(error.message);
+          else setResetSent(true);
+        }}
+      >
+        {resetSent ? (
+          <div className="rounded-md border border-border bg-muted/40 p-4 text-sm">
+            Check your inbox — we've sent a password reset link to <span className="font-medium">{email}</span>. It may take a minute to arrive.
+          </div>
+        ) : (
+          <>
+            <p className="text-sm text-muted-foreground">
+              Enter your account email and we'll send you a link to reset your password.
+            </p>
+            <div className="space-y-2"><Label>Email</Label><Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required /></div>
+            <Button className="w-full" disabled={busy}>{busy ? "Sending…" : "Send reset link"}</Button>
+          </>
+        )}
+        <button
+          type="button"
+          onClick={() => { setForgotMode(false); setResetSent(false); }}
+          className="w-full text-center text-sm text-muted-foreground underline-offset-4 hover:underline"
+        >
+          Back to sign in
+        </button>
+      </form>
+    );
+  }
+
   return (
     <form
       className="mt-4 space-y-4"
@@ -131,6 +176,13 @@ function SignInForm() {
         </div>
       </div>
       <Button className="w-full" disabled={busy}>{busy ? "Signing in…" : "Sign in"}</Button>
+      <button
+        type="button"
+        onClick={() => setForgotMode(true)}
+        className="w-full text-center text-sm text-muted-foreground underline-offset-4 hover:underline"
+      >
+        Forgot your password?
+      </button>
     </form>
   );
 }
