@@ -47,7 +47,7 @@ function SubjectInner() {
   const [busy, setBusy] = useState(false);
 
   const fileRef = useRef<HTMLInputElement>(null);
-  const [motivation, setMotivation] = useState<{ title: string; message: string; tone: "up" | "down" | "steady" | "first" } | null>(null);
+  const [motivation, setMotivation] = useState<{ title: string; message: string; detail?: string; tone: "up" | "down" | "steady" | "first" } | null>(null);
   const [importOpen, setImportOpen] = useState(false);
   const [importRows, setImportRows] = useState<ImportRow[]>([]);
   const [importErrors, setImportErrors] = useState<{ row: number; message: string }[]>([]);
@@ -133,8 +133,18 @@ function SubjectInner() {
     setBusy(false);
     if (error) { toast.error(friendlyError(error)); return; }
     const newPct = Math.round((mv / mxv) * 100);
-    const prev = marks.length ? Math.round((marks[marks.length - 1].marks / marks[marks.length - 1].max_marks) * 100) : null;
-    setMotivation(buildMotivation(newPct, prev));
+    const prevMark = marks.length ? marks[marks.length - 1] : null;
+    const prev = prevMark ? Math.round((prevMark.marks / prevMark.max_marks) * 100) : null;
+    const mot = buildMotivation(newPct, prev);
+    if (prevMark) {
+      const marksDiff = mv - prevMark.marks;
+      mot.detail = marksDiff === 0
+        ? `Same marks as last time: ${mv}/${mxv} (previous paper: ${prevMark.marks}/${prevMark.max_marks})`
+        : marksDiff > 0
+          ? `Your marks increased by ${marksDiff} — ${prevMark.marks}/${prevMark.max_marks} → ${mv}/${mxv}`
+          : `Your marks decreased by ${Math.abs(marksDiff)} — ${prevMark.marks}/${prevMark.max_marks} → ${mv}/${mxv}`;
+    }
+    setMotivation(mot);
     setExamName(""); setM("");
     load();
   }
