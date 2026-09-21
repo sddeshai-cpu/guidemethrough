@@ -329,6 +329,11 @@ function SubjectInner() {
               {motivation?.tone === "first" && "✨"}
             </div>
             <DialogTitle className="serif text-2xl">{motivation?.title}</DialogTitle>
+            {motivation?.detail && (
+              <p className={`rounded-md border px-3 py-2 text-sm font-medium ${motivation.tone === "up" ? "border-green-600/30 bg-green-600/10 text-green-700 dark:text-green-400" : motivation.tone === "down" ? "border-destructive/30 bg-destructive/10 text-destructive" : "border-border bg-muted/40 text-muted-foreground"}`}>
+                {motivation.detail}
+              </p>
+            )}
             <DialogDescription className="text-base text-foreground/80">
               {motivation?.message}
             </DialogDescription>
