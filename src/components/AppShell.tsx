@@ -21,6 +21,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   const nav = [
     { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
     { to: "/timetable", label: "Timetable", icon: CalendarClock },
+    { to: "/timer", label: "Timer", icon: Timer },
     { to: "/tutor", label: "AI Tutor", icon: MessageCircle },
   ];
 
