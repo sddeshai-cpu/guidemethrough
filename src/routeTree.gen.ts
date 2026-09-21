@@ -13,6 +13,7 @@ import { Route as TutorRouteImport } from './routes/tutor'
 import { Route as TimetableRouteImport } from './routes/timetable'
 import { Route as TimerRouteImport } from './routes/timer'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as McpRouteImport } from './routes/mcp'
 import { Route as DashboardRouteImport } from './routes/dashboard'
@@ -44,6 +45,11 @@ const TimerRoute = TimerRouteImport.update({
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OnboardingRoute = OnboardingRouteImport.update({
@@ -117,6 +123,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof DashboardRoute
   '/mcp': typeof McpRoute
   '/onboarding': typeof OnboardingRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/timer': typeof TimerRoute
   '/timetable': typeof TimetableRoute
@@ -135,6 +142,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof DashboardRoute
   '/mcp': typeof McpRoute
   '/onboarding': typeof OnboardingRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/timer': typeof TimerRoute
   '/timetable': typeof TimetableRoute
@@ -154,6 +162,7 @@ export interface FileRoutesById {
   '/dashboard': typeof DashboardRoute
   '/mcp': typeof McpRoute
   '/onboarding': typeof OnboardingRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/timer': typeof TimerRoute
   '/timetable': typeof TimetableRoute
@@ -174,6 +183,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/mcp'
     | '/onboarding'
+    | '/reset-password'
     | '/sitemap.xml'
     | '/timer'
     | '/timetable'
@@ -192,6 +202,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/mcp'
     | '/onboarding'
+    | '/reset-password'
     | '/sitemap.xml'
     | '/timer'
     | '/timetable'
@@ -210,6 +221,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/mcp'
     | '/onboarding'
+    | '/reset-password'
     | '/sitemap.xml'
     | '/timer'
     | '/timetable'
@@ -229,6 +241,7 @@ export interface RootRouteChildren {
   DashboardRoute: typeof DashboardRoute
   McpRoute: typeof McpRoute
   OnboardingRoute: typeof OnboardingRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TimerRoute: typeof TimerRoute
   TimetableRoute: typeof TimetableRoute
@@ -270,6 +283,13 @@ declare module '@tanstack/react-router' {
       path: '/sitemap.xml'
       fullPath: '/sitemap.xml'
       preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/onboarding': {
@@ -365,6 +385,7 @@ const rootRouteChildren: RootRouteChildren = {
   DashboardRoute: DashboardRoute,
   McpRoute: McpRoute,
   OnboardingRoute: OnboardingRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TimerRoute: TimerRoute,
   TimetableRoute: TimetableRoute,

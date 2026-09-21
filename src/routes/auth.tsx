@@ -176,6 +176,13 @@ function SignInForm() {
         </div>
       </div>
       <Button className="w-full" disabled={busy}>{busy ? "Signing in…" : "Sign in"}</Button>
+      <button
+        type="button"
+        onClick={() => setForgotMode(true)}
+        className="w-full text-center text-sm text-muted-foreground underline-offset-4 hover:underline"
+      >
+        Forgot your password?
+      </button>
     </form>
   );
 }
