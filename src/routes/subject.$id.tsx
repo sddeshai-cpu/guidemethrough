@@ -47,7 +47,7 @@ function SubjectInner() {
   const [busy, setBusy] = useState(false);
 
   const fileRef = useRef<HTMLInputElement>(null);
-  const [motivation, setMotivation] = useState<{ title: string; message: string; tone: "up" | "down" | "steady" | "first" } | null>(null);
+  const [motivation, setMotivation] = useState<{ title: string; message: string; detail?: string; tone: "up" | "down" | "steady" | "first" } | null>(null);
   const [importOpen, setImportOpen] = useState(false);
   const [importRows, setImportRows] = useState<ImportRow[]>([]);
   const [importErrors, setImportErrors] = useState<{ row: number; message: string }[]>([]);
@@ -133,8 +133,18 @@ function SubjectInner() {
     setBusy(false);
     if (error) { toast.error(friendlyError(error)); return; }
     const newPct = Math.round((mv / mxv) * 100);
-    const prev = marks.length ? Math.round((marks[marks.length - 1].marks / marks[marks.length - 1].max_marks) * 100) : null;
-    setMotivation(buildMotivation(newPct, prev));
+    const prevMark = marks.length ? marks[marks.length - 1] : null;
+    const prev = prevMark ? Math.round((prevMark.marks / prevMark.max_marks) * 100) : null;
+    const mot = buildMotivation(newPct, prev);
+    if (prevMark) {
+      const marksDiff = mv - prevMark.marks;
+      mot.detail = marksDiff === 0
+        ? `Same marks as last time: ${mv}/${mxv} (previous paper: ${prevMark.marks}/${prevMark.max_marks})`
+        : marksDiff > 0
+          ? `Your marks increased by ${marksDiff} — ${prevMark.marks}/${prevMark.max_marks} → ${mv}/${mxv}`
+          : `Your marks decreased by ${Math.abs(marksDiff)} — ${prevMark.marks}/${prevMark.max_marks} → ${mv}/${mxv}`;
+    }
+    setMotivation(mot);
     setExamName(""); setM("");
     load();
   }
@@ -319,6 +329,11 @@ function SubjectInner() {
               {motivation?.tone === "first" && "✨"}
             </div>
             <DialogTitle className="serif text-2xl">{motivation?.title}</DialogTitle>
+            {motivation?.detail && (
+              <p className={`rounded-md border px-3 py-2 text-sm font-medium ${motivation.tone === "up" ? "border-green-600/30 bg-green-600/10 text-green-700 dark:text-green-400" : motivation.tone === "down" ? "border-destructive/30 bg-destructive/10 text-destructive" : "border-border bg-muted/40 text-muted-foreground"}`}>
+                {motivation.detail}
+              </p>
+            )}
             <DialogDescription className="text-base text-foreground/80">
               {motivation?.message}
             </DialogDescription>
