@@ -357,7 +357,7 @@ function Stat({ label, value }: { label: string; value: string }) {
   );
 }
 
-function buildMotivation(current: number, prev: number | null): { title: string; message: string; tone: "up" | "down" | "steady" | "first" } {
+function buildMotivation(current: number, prev: number | null): { title: string; message: string; detail?: string; tone: "up" | "down" | "steady" | "first" } {
   if (prev === null) {
     return { tone: "first", title: "The journey begins", message: `First paper logged at ${current}% — every great trajectory starts with a single mark.` };
   }
