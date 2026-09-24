@@ -80,7 +80,7 @@ function DashboardInner() {
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground sm:text-sm">{streamLabel(profile?.stream)} Stream</p>
-          <h1 className="mt-1 text-3xl sm:text-4xl">Hi, {profile?.username}.</h1>
+          <h1 className="mt-1 text-3xl sm:text-4xl">Your A/L Marks Dashboard</h1>
           <p className="mt-1 text-sm text-muted-foreground sm:text-base">Here are your subjects and how each is trending.</p>
         </div>
         <div className="flex flex-wrap gap-2">

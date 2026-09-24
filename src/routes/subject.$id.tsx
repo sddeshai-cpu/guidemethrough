@@ -233,7 +233,7 @@ function SubjectInner() {
                     </div>
                     <div className="flex items-center gap-3">
                       <span className="serif text-xl">{pct}%</span>
-                      <Button variant="ghost" size="sm" onClick={() => delMark(mk.id)}>
+                      <Button variant="ghost" size="sm" aria-label={`Delete ${mk.exam_name} mark`} onClick={() => delMark(mk.id)}>
                         <Trash2 className="h-4 w-4" />
                       </Button>
                     </div>
